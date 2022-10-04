@@ -37,4 +37,6 @@ class MultipleInputDialog(QtWidgets.QDialog):
         self.accept()
 
     def getResult(self):
+        if len(self.resultList) == 1:
+            return self.resultList[0]
         return self.resultList

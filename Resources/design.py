@@ -44,7 +44,7 @@ class Ui_MainWindow(object):
         self.btnChangeUser2Name.setGeometry(QtCore.QRect(380, 120, 121, 23))
         self.btnChangeUser2Name.setObjectName("btnChangeUser2Name")
         self.labelTotalUser1 = QtWidgets.QLabel(self.centralwidget)
-        self.labelTotalUser1.setGeometry(QtCore.QRect(50, 500, 47, 13))
+        self.labelTotalUser1.setGeometry(QtCore.QRect(50, 500, 111, 16))
         self.labelTotalUser1.setObjectName("labelTotalUser1")
         self.labelNetDebt = QtWidgets.QLabel(self.centralwidget)
         self.labelNetDebt.setGeometry(QtCore.QRect(420, 190, 47, 13))
