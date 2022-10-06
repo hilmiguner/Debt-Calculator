@@ -23,6 +23,15 @@
       <height>371</height>
      </rect>
     </property>
+    <property name="editTriggers">
+     <set>QAbstractItemView::NoEditTriggers</set>
+    </property>
+    <property name="selectionMode">
+     <enum>QAbstractItemView::SingleSelection</enum>
+    </property>
+    <property name="selectionBehavior">
+     <enum>QAbstractItemView::SelectRows</enum>
+    </property>
     <column>
      <property name="text">
       <string>Name</string>
@@ -142,6 +151,9 @@
     <property name="text">
      <string>Add entry</string>
     </property>
+    <property name="autoDefault">
+     <bool>true</bool>
+    </property>
    </widget>
    <widget class="QPushButton" name="btnDeleteEntryUser1">
     <property name="geometry">
@@ -154,6 +166,9 @@
     </property>
     <property name="text">
      <string>Delete entry</string>
+    </property>
+    <property name="autoDefault">
+     <bool>false</bool>
     </property>
    </widget>
   </widget>

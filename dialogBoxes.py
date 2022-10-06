@@ -4,9 +4,9 @@ import datetime
 
 class MultipleInputDialog(QtWidgets.QDialog):
 
-    def __init__(self, parent=None, labelArr=None):
+    def __init__(self, parent=None, windowTitle=None, labelArr=None):
         super().__init__(parent)
-        self.setWindowTitle("New Entry")
+        self.setWindowTitle(windowTitle)
         self.lineEdits = []
         self.resultList = []
 
