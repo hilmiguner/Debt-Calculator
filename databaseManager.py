@@ -39,7 +39,6 @@ class DBManager:
 
     def editRow(self, tableName: str, ID: int, newValues: list):
         sql = f"UPDATE {tableName} SET Name='{newValues[0]}', Debt={newValues[1]}, Date='{newValues[2]}' WHERE ID={ID}"
-        print(sql)
         try:
             self.cursor.execute(sql)
             self.connection.commit()
