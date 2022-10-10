@@ -18,7 +18,7 @@ class DBManager:
             print(err)
 
     def addRow(self, tableName: str, name: str, debt: float, date: str):
-        sql = f"INSERT INTO {tableName} VALUES ('{name}','{debt}','{date}')"
+        sql = f"INSERT INTO {tableName}(Name, Debt, Date)VALUES ('{name}','{debt}','{date}')"
         try:
             self.cursor.execute(sql)
             self.connection.commit()
@@ -27,12 +27,9 @@ class DBManager:
 
     def getRows(self, tableName: str, columns=None):
         if columns is None:
-            columns = ["Name", "Debt", "Date"]
-        if len(columns) == 3:
-            sql = f"SELECT * FROM {tableName}"
-        else:
-            sql = "SELECT " + ",".join(["{}"]*len(columns)) + f" FROM {tableName}"
-            sql = sql.format(*columns)
+            columns = ["ID", "Name", "Debt", "Date"]
+        sql = "SELECT " + ",".join(["{}"]*len(columns)) + f" FROM {tableName}"
+        sql = sql.format(*columns)
         try:
             self.cursor.execute(sql)
             return self.cursor.fetchall()
@@ -40,16 +37,16 @@ class DBManager:
             print(err)
             return -1
 
-    def editRow(self, tableName: str, name: str, debt: float, date: str, newValues: list):
-        sql = f"UPDATE {tableName} SET Name='{newValues[0]}', Debt={newValues[1]}, Date='{newValues[2]}' WHERE Name='{name}' and Debt={debt} and Date='{date}'"
+    def editRow(self, tableName: str, ID: int, newValues: list):
+        sql = f"UPDATE {tableName} SET Name='{newValues[0]}', Debt={newValues[1]}, Date='{newValues[2]}' WHERE ID={ID}"
         try:
             self.cursor.execute(sql)
             self.connection.commit()
         except Exception as err:
             print(err)
 
-    def deleteRow(self, tableName: str, name: str, debt: float, date: str):
-        sql = f"DELETE FROM {tableName} WHERE Name='{name}' and Debt={debt} and Date='{date}'"
+    def deleteRow(self, tableName: str, ID: int):
+        sql = f"DELETE FROM {tableName} WHERE ID={ID}"
         try:
             self.cursor.execute(sql)
             self.connection.commit()

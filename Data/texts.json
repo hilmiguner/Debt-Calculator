@@ -1,1 +1,6 @@
-{"user1": "Hilmi", "user2": "Hazar", "btnRename": "Rename '{}'"}
+{
+  "user1": "Hilmi",
+  "user2": "Hazar",
+  "debtFromUser1ToUser2": 0,
+  "debtFromUser2ToUser1": 0
+}
