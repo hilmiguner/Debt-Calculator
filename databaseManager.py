@@ -1,5 +1,7 @@
 from sqlite3 import connect
 from datetime import datetime
+from PyQt5.QtWidgets import QMessageBox
+from PyQt5 import QtWidgets
 
 class DBManager:
     def __init__(self):
@@ -35,7 +37,6 @@ class DBManager:
             return self.cursor.fetchall()
         except Exception as err:
             print(err)
-            return -1
 
     def editRow(self, tableName: str, ID: int, newValues: list):
         sql = f"UPDATE {tableName} SET Name='{newValues[0]}', Debt={newValues[1]}, Date='{newValues[2]}' WHERE ID={ID}"
@@ -45,8 +46,11 @@ class DBManager:
         except Exception as err:
             print(err)
 
-    def deleteRow(self, tableName: str, ID: int):
-        sql = f"DELETE FROM {tableName} WHERE ID={ID}"
+    def deleteRow(self, tableName: str, ID=None):
+        if ID is None:
+            sql = f"DELETE FROM {tableName}"
+        else:
+            sql = f"DELETE FROM {tableName} WHERE ID={ID}"
         try:
             self.cursor.execute(sql)
             self.connection.commit()

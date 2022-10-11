@@ -50,6 +50,9 @@ class DebtCalculator(QtWidgets.QMainWindow):
         self.uiManager.tableUser1toUser2.cellDoubleClicked.connect(self.action_tableUser1toUser2CellDoubleClicked)
         self.uiManager.tableUser2toUser1.cellDoubleClicked.connect(self.action_tableUser2toUser1CellDoubleClicked)
 
+        self.uiManager.btnClearTable1.clicked.connect(self.action_btnClearTable1)
+        self.uiManager.btnClearTable2.clicked.connect(self.action_btnClearTable2)
+
     def initTexts(self):
         self.user1Name = self.textDict["user1"]
         self.user2Name = self.textDict["user2"]
@@ -93,6 +96,25 @@ class DebtCalculator(QtWidgets.QMainWindow):
             with open("Data/texts.json", "w") as file:
                 json.dump(self.textDict, file)
             self.uiManager.labelTotalUser2.setText(f"Total: {self.textDict['debtFromUser2ToUser1']}")
+        self.netDebt()
+
+    def netDebt(self):
+        u1_to_u2 = self.textDict["debtFromUser1ToUser2"]
+        u2_to_u1 = self.textDict["debtFromUser2ToUser1"]
+        text = ""
+        if u2_to_u1 == u1_to_u2:
+            text = "Net debt is zero."
+        elif u1_to_u2 > u2_to_u1:
+            debt = u1_to_u2 - u2_to_u1
+            if len(str(debt).split(".")[1]) > 3:
+                debt = float(str(debt)[:-(len(str(debt).split(".")[1]) - 3)])
+            text = f"{self.user1Name}\nowes {debt} to\n{self.user2Name}"
+        elif u2_to_u1 > u1_to_u2:
+            debt = u2_to_u1 - u1_to_u2
+            if len(str(debt).split(".")[1]) > 3:
+                debt = float(str(debt)[:-(len(str(debt).split(".")[1]) - 3)])
+            text = f"{self.user2Name}\nowes {debt} to\n{self.user1Name}"
+        self.uiManager.labelNetDebt.setText(text)
 
     def action_btnAddEntryUser1(self):
         inputBox = MultipleInputDialog(parent=self, windowTitle="New Entry", labelArr=["Name:", "Debt:", "Date:"])
@@ -169,6 +191,7 @@ class DebtCalculator(QtWidgets.QMainWindow):
                 json.dump(self.textDict, file)
 
             self.initTexts()
+            self.netDebt()
 
     def action_btnChangeUser2Name(self):
         oldName = self.user2Name
@@ -181,6 +204,7 @@ class DebtCalculator(QtWidgets.QMainWindow):
                 json.dump(self.textDict, file)
 
             self.initTexts()
+            self.netDebt()
 
     def action_btnDeleteEntryUser1(self):
         table = self.uiManager.tableUser1toUser2
@@ -330,6 +354,54 @@ class DebtCalculator(QtWidgets.QMainWindow):
             table.setItem(selectedItemsRow, 2, QTableWidgetItem(response[1]))
             table.setItem(selectedItemsRow, 3, QTableWidgetItem(response[2]))
             self.calculateDebt("user2", debtDiff)
+
+    def action_btnClearTable1(self):
+        if self.uiManager.tableUser1toUser2.rowCount() == 0:
+            QMessageBox.warning(
+                self,
+                "No Data to Clear",
+                "There is no data to clear in table 1",
+                QMessageBox.Ok,
+                QMessageBox.Ok
+            )
+            return
+        else:
+            alertBox = QMessageBox.warning(
+                self,
+                "ALERT !!",
+                "ARE YOU SURE TO DELETE ALL THE DATA FROM TABLE 1 ?",
+                QMessageBox.Yes | QMessageBox.No,
+                QMessageBox.No
+            )
+            if alertBox == QMessageBox.Yes:
+                dbManager = DBManager()
+                dbManager.deleteRow("debtUser1ToUser2")
+                self.loadTables()
+                self.calculateDebt("user1", -(self.textDict["debtFromUser1ToUser2"]))
+
+    def action_btnClearTable2(self):
+        if self.uiManager.tableUser2toUser1.rowCount() == 0:
+            QMessageBox.warning(
+                self,
+                "No Data to Clear",
+                "There is no data to clear in table 2",
+                QMessageBox.Ok,
+                QMessageBox.Ok
+            )
+            return
+        else:
+            alertBox = QMessageBox.warning(
+                self,
+                "ALERT !!",
+                "ARE YOU SURE TO DELETE ALL THE DATA FROM TABLE 2 ?",
+                QMessageBox.Yes | QMessageBox.No,
+                QMessageBox.No
+            )
+            if alertBox == QMessageBox.Yes:
+                dbManager = DBManager()
+                dbManager.deleteRow("debtUser2ToUser1")
+                self.loadTables()
+                self.calculateDebt("user2", -(self.textDict["debtFromUser2ToUser1"]))
 
 def runApp():
     myApp = QtWidgets.QApplication(sys.argv)
